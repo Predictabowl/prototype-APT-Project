@@ -12,10 +12,10 @@
 
 		<properties>
 			<property name="javax.persistence.jdbc.url"
-				value="jdbc:postgresql://localhost:5432/testdb" />
-			<property name="javax.persistence.jdbc.user" value="mario" />
+				value="jdbc:postgresql://localhost:5432/prototypeTestDb" />
+			<property name="javax.persistence.jdbc.user" value="testUser" />
 			<property name="javax.persistence.jdbc.password"
-				value="segreta" />
+				value="secret" />
 			<property name="javax.persistence.jdbc.driver"
 				value="org.postgresql.Driver" />
 

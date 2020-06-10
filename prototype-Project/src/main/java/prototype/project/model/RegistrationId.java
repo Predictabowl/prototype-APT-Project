@@ -1,9 +1,10 @@
-package prototype.project.model.id;
+package prototype.project.model;
 
 import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.ManyToOne;
 
 @Embeddable
 public class RegistrationId implements Serializable{
@@ -12,10 +13,7 @@ public class RegistrationId implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	@Column(name = "STUDENT_ID")
 	private Long studentId;
-	
-	@Column(name = "COURSE_ID")
 	private Long courseId;
 
 

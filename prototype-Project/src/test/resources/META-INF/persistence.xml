@@ -21,9 +21,9 @@
 		
 		<!--  if persistence.xml isn't the the main folder it cannot found the entity
 			so we have to tell him where to find it -->
-		<class>prototype.project.Student</class>
-		<class>prototype.project.Course</class>
-		<class>prototype.project.Registration</class>
+		<class>prototype.project.model.Student</class>
+		<class>prototype.project.model.Course</class>
+		<class>prototype.project.model.Registration</class>
 		
 		<properties>
 
@@ -47,9 +47,9 @@
       		<property name="javax.persistence.schema-generation.scripts.create-target" value="target/jpa/sql/create-schema.sql"/>
  -->
 
-			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/testdb" />
-			<property name="javax.persistence.jdbc.user" value="mario" />
-			<property name="javax.persistence.jdbc.password" value="segreta" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/prototypeTestDb" />
+			<property name="javax.persistence.jdbc.user" value="testUser" />
+			<property name="javax.persistence.jdbc.password" value="secret" />
 			<property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
 
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL95Dialect"/>

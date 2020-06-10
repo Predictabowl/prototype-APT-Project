@@ -7,8 +7,6 @@ import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import prototype.project.model.id.RegistrationId;
-
 @Entity
 @IdClass(RegistrationId.class)
 public class Registration {
@@ -16,12 +14,12 @@ public class Registration {
 	@Id
 	@ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn(referencedColumnName = "id")
-	private Student student;
+	private Student studentId;
 
 	@Id
 	@ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn(referencedColumnName = "id")
-	private Course course;
+	private Course courseId;
 
 	private boolean paid;
 	
@@ -31,25 +29,25 @@ public class Registration {
 
 	public Registration(Student student, Course course, boolean paid) {
 		super();
-		this.student = student;
-		this.course = course;
+		this.studentId = student;
+		this.courseId = course;
 		this.paid = paid;
 	}
 
 	public Student getStudent() {
-		return student;
+		return studentId;
 	}
 
 	public void setStudent(Student student) {
-		this.student = student;
+		this.studentId = student;
 	}
 
 	public Course getCourse() {
-		return course;
+		return courseId;
 	}
 
 	public void setCourse(Course course) {
-		this.course = course;
+		this.courseId = course;
 	}
 
 	public boolean isPaid() {
@@ -64,9 +62,9 @@ public class Registration {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((course == null) ? 0 : course.hashCode());
+		result = prime * result + ((courseId == null) ? 0 : courseId.hashCode());
 		result = prime * result + (paid ? 1231 : 1237);
-		result = prime * result + ((student == null) ? 0 : student.hashCode());
+		result = prime * result + ((studentId == null) ? 0 : studentId.hashCode());
 		return result;
 	}
 
@@ -79,25 +77,25 @@ public class Registration {
 		if (getClass() != obj.getClass())
 			return false;
 		Registration other = (Registration) obj;
-		if (course == null) {
-			if (other.course != null)
+		if (courseId == null) {
+			if (other.courseId != null)
 				return false;
-		} else if (!course.equals(other.course))
+		} else if (!courseId.equals(other.courseId))
 			return false;
 		if (paid != other.paid)
 			return false;
-		if (student == null) {
-			if (other.student != null)
+		if (studentId == null) {
+			if (other.studentId != null)
 				return false;
-		} else if (!student.equals(other.student))
+		} else if (!studentId.equals(other.studentId))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Registration [student=" + student + ", course=" + course + ", paid=" + paid + "]";
+		return "Registration [student=" + studentId + ", course=" + courseId + ", paid=" + paid + "]";
 	}
-	
-	
+
+
 }
