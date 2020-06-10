@@ -1,4 +1,4 @@
-package prototype.project.model;
+package prototype.project.model.id;
 
 import java.io.Serializable;
 

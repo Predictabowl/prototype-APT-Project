@@ -7,6 +7,8 @@ import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import prototype.project.model.id.RegistrationId;
+
 @Entity
 @IdClass(RegistrationId.class)
 public class Registration {
