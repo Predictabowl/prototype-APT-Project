@@ -1,36 +1,48 @@
 package prototype.project.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 
 @Entity
 public class Student {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long id = null;
+	
+	@Column(unique = true, updatable = false)
+	private String code;
 	
 	private String name;
 	
-	@OneToMany (cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<Registration> registrations;
+	@OneToMany (mappedBy = "student",cascade = CascadeType.ALL, orphanRemoval = true)
+//	@OneToMany (mappedBy = "student")
+//	@OneToMany
+//	@JoinTable
+	private Set<Registration> registrations = new HashSet<>();
 	
 	public Student() {
-		// TODO Auto-generated constructor stub
 	}
 
-	public Student(Long id, String name, Set<Registration> registrations) {
-		super();
-		this.id = id;
+	public Student(String code, String name, Set<Registration> registrations) {
+		this.code = code;
 		this.name = name;
 		this.registrations = registrations;
 	}
-
+	
+	public Student(String code, String name) {
+		this.code = code;
+		this.name = name;
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -54,14 +66,20 @@ public class Student {
 	public void setRegistrations(Set<Registration> registrations) {
 		this.registrations = registrations;
 	}
+	
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((registrations == null) ? 0 : registrations.hashCode());
+		result = prime * result + ((code == null) ? 0 : code.hashCode());
 		return result;
 	}
 
@@ -74,20 +92,10 @@ public class Student {
 		if (getClass() != obj.getClass())
 			return false;
 		Student other = (Student) obj;
-		if (id == null) {
-			if (other.id != null)
+		if (code == null) {
+			if (other.code != null)
 				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (registrations == null) {
-			if (other.registrations != null)
-				return false;
-		} else if (!registrations.equals(other.registrations))
+		} else if (!code.equals(other.code))
 			return false;
 		return true;
 	}
@@ -97,4 +105,5 @@ public class Student {
 		return "Student [id=" + id + ", name=" + name + ", registrations=" + registrations + "]";
 	}
 
+	
 }

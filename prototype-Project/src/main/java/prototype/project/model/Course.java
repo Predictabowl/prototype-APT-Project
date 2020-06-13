@@ -1,34 +1,46 @@
 package prototype.project.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 
 @Entity
 public class Course {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long id = null;
+	
+	@Column(unique = true, updatable = false)
+	private String code;
 	
 	private String description;
 	
-	@OneToMany (cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<Registration> registrations;
+	@OneToMany (mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+//	@OneToMany (mappedBy = "course")
+//	@OneToMany
+//	@JoinTable
+	private Set<Registration> registrations = new HashSet<>();
 	
 	public Course() {
-		// TODO Auto-generated constructor stub
 	}
 
-	public Course(Long id, String description, Set<Registration> registrations) {
-		super();
-		this.id = id;
+	public Course(String code, String description, Set<Registration> registrations) {
+		this.code = code;
 		this.description = description;
 		this.registrations = registrations;
+	}
+	
+	public Course(String code, String description) {
+		this.code = code;
+		this.description = description;
 	}
 
 	public Long getId() {
@@ -55,13 +67,20 @@ public class Course {
 		this.registrations = registrations;
 	}
 
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((registrations == null) ? 0 : registrations.hashCode());
+		result = prime * result + ((code == null) ? 0 : code.hashCode());
 		return result;
 	}
 
@@ -74,20 +93,10 @@ public class Course {
 		if (getClass() != obj.getClass())
 			return false;
 		Course other = (Course) obj;
-		if (description == null) {
-			if (other.description != null)
+		if (code == null) {
+			if (other.code != null)
 				return false;
-		} else if (!description.equals(other.description))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (registrations == null) {
-			if (other.registrations != null)
-				return false;
-		} else if (!registrations.equals(other.registrations))
+		} else if (!code.equals(other.code))
 			return false;
 		return true;
 	}

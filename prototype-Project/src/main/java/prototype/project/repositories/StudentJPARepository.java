@@ -1,6 +1,5 @@
 package prototype.project.repositories;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -17,7 +16,7 @@ public class StudentJPARepository implements StudentRepository{
 
 	@Override
 	public List<Student> findAll() {
-		return Collections.EMPTY_LIST;
+		return entityManager.createQuery("from Student",Student.class).getResultList();
 	}
 
 	@Override

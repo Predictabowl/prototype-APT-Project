@@ -1,25 +1,38 @@
 package prototype.project.model;
 
+import java.io.Serializable;
+
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+
+import prototype.project.model.id.RegistrationId;
 
 @Entity
 @IdClass(RegistrationId.class)
-public class Registration {
+public class Registration{
+
+//	@EmbeddedId
+//	RegistrationId id;
 	
 	@Id
-	@ManyToOne (fetch = FetchType.LAZY)
-	@JoinColumn(referencedColumnName = "id")
-	private Student studentId;
+	@ManyToOne
+//	@ManyToOne (fetch = FetchType.LAZY)
+	@JoinColumn(name = "studentId", referencedColumnName = "id")
+//	@MapsId("studentId")
+	private Student student;
 
 	@Id
-	@ManyToOne (fetch = FetchType.LAZY)
-	@JoinColumn(referencedColumnName = "id")
-	private Course courseId;
+	@ManyToOne
+//	@ManyToOne (fetch = FetchType.LAZY)
+	@JoinColumn(name = "courseId", referencedColumnName = "id")
+//	@MapsId("courseId")
+	private Course course;
 
 	private boolean paid;
 	
@@ -29,25 +42,25 @@ public class Registration {
 
 	public Registration(Student student, Course course, boolean paid) {
 		super();
-		this.studentId = student;
-		this.courseId = course;
+		this.student = student;
+		this.course = course;
 		this.paid = paid;
 	}
 
 	public Student getStudent() {
-		return studentId;
+		return student;
 	}
 
 	public void setStudent(Student student) {
-		this.studentId = student;
+		this.student = student;
 	}
 
 	public Course getCourse() {
-		return courseId;
+		return course;
 	}
 
 	public void setCourse(Course course) {
-		this.courseId = course;
+		this.course = course;
 	}
 
 	public boolean isPaid() {
@@ -62,9 +75,8 @@ public class Registration {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((courseId == null) ? 0 : courseId.hashCode());
-		result = prime * result + (paid ? 1231 : 1237);
-		result = prime * result + ((studentId == null) ? 0 : studentId.hashCode());
+		result = prime * result + ((course == null) ? 0 : course.hashCode());
+		result = prime * result + ((student == null) ? 0 : student.hashCode());
 		return result;
 	}
 
@@ -77,25 +89,22 @@ public class Registration {
 		if (getClass() != obj.getClass())
 			return false;
 		Registration other = (Registration) obj;
-		if (courseId == null) {
-			if (other.courseId != null)
+		if (course == null) {
+			if (other.course != null)
 				return false;
-		} else if (!courseId.equals(other.courseId))
+		} else if (!course.equals(other.course))
 			return false;
-		if (paid != other.paid)
-			return false;
-		if (studentId == null) {
-			if (other.studentId != null)
+		if (student == null) {
+			if (other.student != null)
 				return false;
-		} else if (!studentId.equals(other.studentId))
+		} else if (!student.equals(other.student))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Registration [student=" + studentId + ", course=" + courseId + ", paid=" + paid + "]";
+		return "Registration [student=" + student.getCode() + ", course=" + course.getCode() + ", paid=" + paid + "]";
 	}
-
 
 }
