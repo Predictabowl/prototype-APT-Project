@@ -6,12 +6,6 @@
      xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
      http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
 
-<!-- 
-<persistence xmlns="http://java.sun.com/xml/ns/persistence"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
-	version="2.0">
--->
 
 	<persistence-unit
 		name="prototype.project"
@@ -56,8 +50,12 @@
 
 			<property name="hibernate.default_schema" value="testschema"/>
 
-			<property name="hibernate.show_sql" value="true" /> <!-- show SQL logs -->
+			<property name="hibernate.show_sql" value="false" /> <!-- show SQL logs -->
 			<property name="hibernate.format_sql" value="true" /><!--  format the SQL to make it readable -->
+			<!-- 
+			<property name="hibernate.generate.statistics" value="true"/>
+			-->
+			
 <!-- 
 			this is redundant because we're using the persistence style properties
 			<property name="hibernate.hbm2ddl.auto" value="create-drop" />

@@ -15,8 +15,10 @@ import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 
+import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +38,7 @@ class StudentJPARepositoryIT {
 	
 	@BeforeEach
 	public void setUp() {
+//		Configuration config = new Configuration();
 		eManagerFactory = Persistence.createEntityManagerFactory("prototype.project");
 		entityManager = eManagerFactory.createEntityManager();
 		repository = new StudentJPARepository(entityManager);
@@ -90,11 +93,44 @@ class StudentJPARepositoryIT {
 	@Test
 	public void test_save_successful() {
 		Student student = new Student("AR1", "Carlo");
+		entityManager.getTransaction().begin();
 		
-		repository.save(student);		
+		assertThat(repository.save(student)).isTrue();
 		
+		entityManager.getTransaction().commit();
 		Student saved = entityManager.createQuery("from Student",Student.class).getSingleResult();
 		assertThat(saved).isSameAs(student);
+	}
+	
+	@Test
+	public void test_save_when_Student_already_present() {
+		Student student1 = new Student("AR1", "Carlo");
+		addStudentToDB(student1);
+		entityManager.getTransaction().begin();
+		
+		assertThat(repository.save(student1)).isTrue();
+
+		entityManager.getTransaction().commit();
+		
+		assertThat(entityManager.createQuery("from Student",Student.class)
+				.getResultList()).containsExactly(student1);
+
+	}
+	
+	@Test
+	public void test_save_when_Student_code_already_present() {
+		Student student1 = new Student("AR1", "Carlo");
+		addStudentToDB(student1);
+		Student student2 = new Student("AR1", "Luigi");
+		entityManager.getTransaction().begin();
+		
+		assertThat(repository.save(student2)).isFalse();
+
+		entityManager.getTransaction().commit();
+		
+		assertThat(entityManager.createQuery("from Student",Student.class)
+				.getResultList()).containsExactly(student1);
+
 	}
 	
 	private void addStudentToDB(Student student) {

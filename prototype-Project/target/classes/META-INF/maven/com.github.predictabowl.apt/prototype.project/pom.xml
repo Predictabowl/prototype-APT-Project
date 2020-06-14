@@ -35,6 +35,12 @@
 			<artifactId>hibernate-core</artifactId>
 			<version>5.4.17.Final</version>
 		</dependency>
+		<!-- Remember to check if C3p0 is active -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-c3p0</artifactId>
+			<version>5.4.17.Final</version>
+		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
@@ -46,6 +52,16 @@
 			<artifactId>awaitility</artifactId>
 			<version>4.0.3</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.13.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.13.3</version>
 		</dependency>
 	</dependencies>
 
