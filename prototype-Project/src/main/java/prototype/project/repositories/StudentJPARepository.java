@@ -3,6 +3,7 @@ package prototype.project.repositories;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 import prototype.project.model.Student;
 
@@ -20,9 +21,15 @@ public class StudentJPARepository implements StudentRepository{
 	}
 
 	@Override
-	public Student findOne(long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Student findOne(String code) {
+		Student student;
+		try {
+			student = entityManager.createQuery("SELECT s FROM Student s WHERE s.code LIKE :sCode",Student.class)
+					.setParameter("sCode", code).getSingleResult();
+		} catch (NoResultException e) {
+			student = null;
+		}
+		return student;
 	}
 
 	@Override

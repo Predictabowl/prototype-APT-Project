@@ -26,7 +26,7 @@ import prototype.project.model.Registration;
 import prototype.project.model.Student;
 import prototype.project.model.id.RegistrationId;
 
-class StudentJPARepositoryTest {
+class StudentJPARepositoryIT {
 
 	private EntityManagerFactory eManagerFactory;
 	private EntityManager entityManager;
@@ -52,47 +52,55 @@ class StudentJPARepositoryTest {
 	
 	
 	@Test
-	void test_findAll_when_empty() {
+	public void test_findAll_when_empty() {
 		List<Student> students = repository.findAll();
 		assertThat(students).isEmpty();
 	}
 	
 	@Test
-	void test_findAll_when_not_empty() {
-		Student student = new Student(null, "Mario", new HashSet<Registration>());
-		Course course = new Course(null, "Corso inutile", new HashSet<Registration>()); 
-		Course course2 = new Course(null, "Corso quasi inutile", new HashSet<Registration>());
-		Registration registration = new Registration(student, course, false);
-		Registration registration2 = new Registration(student, course2, false);
-//		Registration registration = new Registration(new RegistrationId(student.getId(), course.getId()),student, course, false);
-		Set<Registration> registrations = new HashSet<Registration>();
-		registrations.add(registration);
-		student.setRegistrations(registrations);
-//		course.setRegistrations(registrations);
-
-		entityManager.getTransaction().begin();
-		entityManager.persist(student);
-		entityManager.persist(course);
-		entityManager.persist(registration);
-		entityManager.persist(registration2);
-		entityManager.getTransaction().commit();
+	public void test_findAll_when_not_empty() {
+		Student student = new Student("A1", "Mario");
+		addStudentToDB(student);
 		
 		List<Student> students = repository.findAll();
 		
 		assertThat(students).containsExactly(student);
-//		System.out.println(students);
-		System.out.println(entityManager.createQuery("from Registration",Registration.class).getResultList());
+	}
+	
+	@Test
+	public void test_findOne_successful() {
+		Student student = new Student("St4","testName");
+		Student student2 = new Student("St1","Another Name");
+		addStudentToDB(student);
+		addStudentToDB(student2);
 		
-//		System.out.println(
-//				entityManager.createQuery(
-//				"select distinct s from Student s join s.registrations"
-//				,Student.class).getResultList());
+		Student found = repository.findOne("St1");
 		
+		assertThat(found).isSameAs(student2);
 		
-//		System.out.println(students.get(0));
-//		System.out.println(entityManager.createQuery("",Student.class).getResultList());
+	}
+	
+	@Test
+	public void test_findOne_when_not_present() {
+		Student notFound = repository.findOne("code1");
 		
+		assertThat(notFound).isNull();
+	}
+	
+	@Test
+	public void test_save_successful() {
+		Student student = new Student("AR1", "Carlo");
 		
+		repository.save(student);		
+		
+		Student saved = entityManager.createQuery("from Student",Student.class).getSingleResult();
+		assertThat(saved).isSameAs(student);
+	}
+	
+	private void addStudentToDB(Student student) {
+		entityManager.getTransaction().begin();
+		entityManager.persist(student);
+		entityManager.getTransaction().commit();
 	}
 
 }
