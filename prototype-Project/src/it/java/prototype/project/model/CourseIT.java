@@ -7,6 +7,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 
+import org.hibernate.PropertyValueException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +43,8 @@ class CourseIT {
 		entityManager.getTransaction().begin();
 		
 		assertThatThrownBy(() -> entityManager.persist(course2))
-			.isInstanceOf(PersistenceException.class);
+			.isInstanceOf(PersistenceException.class)
+			.getCause().isExactlyInstanceOf(ConstraintViolationException.class);
 		
 		entityManager.getTransaction().commit();
 		
@@ -55,7 +58,8 @@ class CourseIT {
 		entityManager.getTransaction().begin();
 
 		assertThatThrownBy(() -> entityManager.persist(course))
-			.isInstanceOf(PersistenceException.class);
+			.isInstanceOf(PersistenceException.class)
+			.getCause().isExactlyInstanceOf(PropertyValueException.class);
 		
 		entityManager.getTransaction().commit();
 		
@@ -75,7 +79,7 @@ class CourseIT {
 		entityManager.getTransaction().begin();
 		assertThatThrownBy(() -> entityManager.getTransaction().commit())
 			.isInstanceOf(PersistenceException.class);
-	
+		
 		assertThat(entityManager.createQuery("from Course",Course.class).getResultList())
 			.containsExactly(new Course("AR1","test1"));
 	}

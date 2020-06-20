@@ -12,7 +12,7 @@ import org.hibernate.PropertyValueException;
 import org.hibernate.Session;
 import org.hibernate.exception.ConstraintViolationException;
 
-import prototype.project.exceptions.CodeConstraintViolationException;
+import prototype.project.exceptions.SchoolDatabaseException;
 import prototype.project.model.Student;
 
 public class StudentJPARepository implements StudentRepository {
@@ -52,19 +52,11 @@ public class StudentJPARepository implements StudentRepository {
 	}
 
 	@Override
-	public Student save(Student student) throws CodeConstraintViolationException{
+	public Student save(Student student) throws SchoolDatabaseException{
 		try {
 			return entityManager.merge(student);
 		} catch (PersistenceException e) {
-			
-			if(e.getCause() instanceof ConstraintViolationException) {
-				throw new CodeConstraintViolationException("Error while saving Student, duplicate code: "+student.getCode(),e);
-			}
-			if(e.getCause() instanceof PropertyValueException) {
-				throw new CodeConstraintViolationException("Error while saving Student: "+student, e);
-			}
-//			LOGGER.error("Error while saving Student",e);
-			throw e;
+			throw new SchoolDatabaseException("Error while saving Student: "+student,e);
 		}
 	}
 

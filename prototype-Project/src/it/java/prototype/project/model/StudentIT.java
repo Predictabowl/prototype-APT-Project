@@ -7,6 +7,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 
+import org.hibernate.PropertyValueException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +43,8 @@ class StudentIT {
 		entityManager.getTransaction().begin();
 		
 		assertThatThrownBy(() -> entityManager.persist(student2))
-			.isInstanceOf(PersistenceException.class);
+			.isInstanceOf(PersistenceException.class)
+			.getCause().isExactlyInstanceOf(ConstraintViolationException.class);
 		
 		entityManager.getTransaction().commit();
 		
@@ -55,7 +58,8 @@ class StudentIT {
 		entityManager.getTransaction().begin();
 
 		assertThatThrownBy(() -> entityManager.persist(student))
-			.isInstanceOf(PersistenceException.class);
+			.isInstanceOf(PersistenceException.class)
+			.getCause().isExactlyInstanceOf(PropertyValueException.class);
 		
 		entityManager.getTransaction().commit();
 		

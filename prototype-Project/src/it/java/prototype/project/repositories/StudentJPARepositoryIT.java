@@ -16,7 +16,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import prototype.project.exceptions.CodeConstraintViolationException;
+import prototype.project.exceptions.SchoolDatabaseException;
 import prototype.project.model.Student;
 
 class StudentJPARepositoryIT {
@@ -117,7 +117,7 @@ class StudentJPARepositoryIT {
 	
 	
 	@Test
-	public void test_save_when_Student_code_already_present_should_throw() {
+	public void test_save_when_PersistanceException_occur_should_throw_CodeConstraintViolationException() {
 		Student student1 = new Student("AR1", "Carlo");
 		persistStudentToDB(student1);
 		Student student2 = new Student("AR1", "Luigi");
@@ -125,14 +125,32 @@ class StudentJPARepositoryIT {
 		entityManager.getTransaction().begin();
 		
 		assertThatThrownBy(() -> repository.save(student2))
-			.isInstanceOf(CodeConstraintViolationException.class)
-			.hasMessage("Error while saving Student, duplicate code: AR1")
+			.isInstanceOf(SchoolDatabaseException.class)
+			.hasMessage("Error while saving Student: "+student2)
 			.getCause().isInstanceOf(PersistenceException.class);
 		
 		entityManager.getTransaction().commit();
 		
 		assertThat(entityManager.createQuery("from Student",Student.class)
 				.getSingleResult()).isEqualToComparingFieldByField(student1);
+
+	}
+	
+	@Test
+	public void test_save_with_null_code_should_throw() {
+		Student student = new Student(null, "Carlo");
+
+		entityManager.getTransaction().begin();
+		
+		assertThatThrownBy(() -> repository.save(student))
+			.isInstanceOf(SchoolDatabaseException.class)
+			.hasMessage("Error while saving Student: "+student)
+			.getCause().isInstanceOf(PersistenceException.class);
+		
+		entityManager.getTransaction().commit();
+		
+		assertThat(entityManager.createQuery("from Student",Student.class)
+				.getResultList()).isEmpty();
 
 	}
 	
