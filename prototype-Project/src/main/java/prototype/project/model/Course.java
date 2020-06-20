@@ -12,13 +12,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.NaturalId;
+
 @Entity
 public class Course {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id = null;
 	
-	@Column(unique = true, updatable = false)
+	@Column(unique = true, updatable = false, nullable = false)
+	@NaturalId(mutable = false)
 	private String code;
 	
 	private String description;
@@ -103,7 +106,8 @@ public class Course {
 
 	@Override
 	public String toString() {
-		return "Course [id=" + id + ", description=" + description + ", registrations=" + registrations + "]";
+		return "Course [id=" + id + ", code=" + code + ", description=" + description + ", registrations="
+				+ registrations + "]";
 	}
 
 }

@@ -12,20 +12,21 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.NaturalId;
+
 @Entity
 public class Student {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id = null;
 	
-	@Column(unique = true, updatable = false)
+	@Column(unique = true, updatable = false, nullable = false)
+	@NaturalId (mutable = false)
 	private String code;
 	
 	private String name;
 	
 	@OneToMany (mappedBy = "student",cascade = CascadeType.ALL, orphanRemoval = true)
-//	@OneToMany (mappedBy = "student")
-//	@OneToMany
 //	@JoinTable
 	private Set<Registration> registrations = new HashSet<>();
 	
@@ -102,8 +103,7 @@ public class Student {
 
 	@Override
 	public String toString() {
-		return "Student [id=" + id + ", name=" + name + ", registrations=" + registrations + "]";
+		return "Student [id=" + id + ", code=" + code + ", name=" + name + ", registrations=" + registrations + "]";
 	}
 
-	
 }

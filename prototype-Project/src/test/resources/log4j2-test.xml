@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Configuration status="ERROR-">
+<Configuration status="INFO">
 	<Properties>
 		<Property name="log4j.debug" value="true"/>
 	</Properties>

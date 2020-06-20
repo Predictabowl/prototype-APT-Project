@@ -2,15 +2,17 @@ package prototype.project.repositories;
 
 import java.util.List;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.PropertyValueException;
+import org.hibernate.Session;
 import org.hibernate.exception.ConstraintViolationException;
 
+import prototype.project.exceptions.CodeConstraintViolationException;
 import prototype.project.model.Student;
 
 public class StudentJPARepository implements StudentRepository {
@@ -29,33 +31,54 @@ public class StudentJPARepository implements StudentRepository {
 	}
 
 	@Override
-	public Student findOne(String code) {
+	public Student findByCode(String code) {
 		try {
-			return entityManager.createQuery("SELECT s FROM Student s WHERE s.code LIKE :sCode", Student.class)
-					.setParameter("sCode", code).getSingleResult();
+//			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+//			CriteriaQuery<Student> criteriaQuery = criteriaBuilder.createQuery(Student.class);
+//			Root<Student> studentRoot = criteriaQuery.from(Student.class);
+//			criteriaQuery.where(criteriaBuilder.equal(studentRoot.get("code"), code));
+//			return entityManager.createQuery(criteriaQuery).getSingleResult();
+			
+			Session session = entityManager.unwrap(Session.class);
+			return session.byNaturalId(Student.class).using("code", code).getReference();
+			
+//			return entityManager.createQuery("SELECT s FROM Student s WHERE s.code LIKE :sCode", Student.class)
+//					.setParameter("sCode", code).getSingleResult();
 		} catch (NoResultException e) {
-//			LOGGER.error("Student code to delete not found",e);
-			LOGGER.info("Student code to delete not found");
-			return null;
+//			LOGGER.error("Student not found",e);
+			LOGGER.info("Student not found with code: "+code);
 		}
+		return null;
 	}
 
 	@Override
-	public boolean save(Student student) {
+	public Student save(Student student) throws CodeConstraintViolationException{
 		try {
-			entityManager.persist(student);
-			return true;
+			return entityManager.merge(student);
 		} catch (PersistenceException e) {
+			
+			if(e.getCause() instanceof ConstraintViolationException) {
+				throw new CodeConstraintViolationException("Error while saving Student, duplicate code: "+student.getCode(),e);
+			}
+			if(e.getCause() instanceof PropertyValueException) {
+				throw new CodeConstraintViolationException("Error while saving Student: "+student, e);
+			}
 //			LOGGER.error("Error while saving Student",e);
-			LOGGER.error("Error while saving Student");
-			return false;
+			throw e;
 		}
 	}
 
 	@Override
 	public Student delete(long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Student student = entityManager.find(Student.class, id);
+		if (student != null)
+			entityManager.remove(student);
+		return student;
+	}
+
+	@Override
+	public Student findById(long id) {
+		return entityManager.find(Student.class, id);
 	}
 
 }
