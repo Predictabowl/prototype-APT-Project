@@ -1,10 +1,8 @@
 package prototype.project.model;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 
 import org.hibernate.PropertyValueException;
@@ -13,18 +11,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class StudentIT {
+import prototype.project.test.utils.GenericJPAEntitySetup;
 
-	private EntityManagerFactory eManagerFactory;
-	private EntityManager entityManager;
-	
+class StudentIT extends GenericJPAEntitySetup{
+
 	@BeforeEach
 	public void setUp() {
-		eManagerFactory = Persistence.createEntityManagerFactory("prototype.project");
-		entityManager = eManagerFactory.createEntityManager();
-		
-		entityManager.createQuery("from Student",Student.class).getResultStream()
-			.forEach(e -> entityManager.remove(e));
+		setUpEntity(Student.class);
 	}
 	
 	@AfterEach

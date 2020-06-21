@@ -15,23 +15,25 @@ import org.hibernate.exception.ConstraintViolationException;
 import prototype.project.exceptions.SchoolDatabaseException;
 import prototype.project.model.Student;
 
-public class StudentJPARepository implements StudentRepository {
+public class GenericJPAEntityRepository<E> implements GenericEntityRepository<E> {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	
 	private EntityManager entityManager;
+	private final Class<E> classType;
 
-	public StudentJPARepository(EntityManager entityManager) {
+	public GenericJPAEntityRepository(Class<E> classType, EntityManager entityManager) {
+		this.classType = classType;
 		this.entityManager = entityManager;
 	}
 
 	@Override
-	public List<Student> findAll() {
-		return entityManager.createQuery("from Student", Student.class).getResultList();
+	public List<E> findAll() {
+		return entityManager.createQuery("from "+classType.getName(), classType).getResultList();
 	}
 
 	@Override
-	public Student findByCode(String code) {
+	public E findByCode(String code) {
 		try {
 //			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 //			CriteriaQuery<Student> criteriaQuery = criteriaBuilder.createQuery(Student.class);
@@ -40,37 +42,37 @@ public class StudentJPARepository implements StudentRepository {
 //			return entityManager.createQuery(criteriaQuery).getSingleResult();
 			
 			Session session = entityManager.unwrap(Session.class);
-			return session.byNaturalId(Student.class).using("code", code).getReference();
+			return session.byNaturalId(classType).using("code", code).getReference();
 			
 //			return entityManager.createQuery("SELECT s FROM Student s WHERE s.code LIKE :sCode", Student.class)
 //					.setParameter("sCode", code).getSingleResult();
 		} catch (NoResultException e) {
 //			LOGGER.error("Student not found",e);
-			LOGGER.info("Student not found with code: "+code);
+			LOGGER.info(classType.getName()+" not found with code: "+code);
 		}
 		return null;
 	}
 
 	@Override
-	public Student save(Student student) throws SchoolDatabaseException{
+	public E save(E entity) throws SchoolDatabaseException{
 		try {
-			return entityManager.merge(student);
+			return entityManager.merge(entity);
 		} catch (PersistenceException e) {
-			throw new SchoolDatabaseException("Error while saving Student: "+student,e);
+			throw new SchoolDatabaseException("Error while saving entity: "+entity,e);
 		}
 	}
 
 	@Override
-	public Student delete(long id) {
-		Student student = entityManager.find(Student.class, id);
-		if (student != null)
-			entityManager.remove(student);
-		return student;
+	public E delete(long id) {
+		E entity = entityManager.find(classType, id);
+		if (entity != null)
+			entityManager.remove(entity);
+		return entity;
 	}
 
 	@Override
-	public Student findById(long id) {
-		return entityManager.find(Student.class, id);
+	public E findById(long id) {
+		return entityManager.find(classType, id);
 	}
 
 }

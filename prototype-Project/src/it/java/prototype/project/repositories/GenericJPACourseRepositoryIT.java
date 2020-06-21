@@ -1,45 +1,29 @@
 package prototype.project.repositories;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import prototype.project.exceptions.SchoolDatabaseException;
 import prototype.project.model.Course;
+import prototype.project.test.utils.GenericJPAEntitySetup;
 
-class CourseJPARepositoryIT {
+class GenericJPACourseRepositoryIT extends GenericJPAEntitySetup{
 
-	private EntityManagerFactory eManagerFactory;
-	private EntityManager entityManager;
-	
-	private CourseJPARepository repository;
-
+	private GenericJPAEntityRepository<Course> repository;
 	
 	@BeforeEach
 	public void setUp() {
-		eManagerFactory = Persistence.createEntityManagerFactory("prototype.project");
-		entityManager = eManagerFactory.createEntityManager();
-		repository = new CourseJPARepository(entityManager);
-		
-		entityManager.createQuery("from Course",Course.class).getResultStream()
-			.forEach(e -> entityManager.remove(e));
+		setUpEntity(Course.class);		
+		repository = new GenericJPAEntityRepository<Course>(Course.class, entityManager);
 	}
-	
-	@AfterEach
-	public void tearDown() {
-		entityManager.close();
-		eManagerFactory.close();
-	}
-
 	
 	@Test
 	public void test_findAll_when_empty() {
@@ -112,10 +96,10 @@ class CourseJPARepositoryIT {
 		})).isNull();
 		
 	}
-	
+
 	
 	@Test
-	public void test_save_when_Course_code_already_present_should_throw() {
+	public void test_save_when_PersistanceException_occur_should_throw_new_Exception() {
 		Course course1 = new Course("CS1", "History");
 		persistCourseToDB(course1);
 		Course course2 = new Course("CS1", "Logic");
@@ -124,7 +108,7 @@ class CourseJPARepositoryIT {
 		
 		assertThatThrownBy(() -> repository.save(course2))
 			.isInstanceOf(SchoolDatabaseException.class)
-			.hasMessage("Error while saving Course: "+course2)
+			.hasMessage("Error while saving entity: "+course2)
 			.getCause().isInstanceOf(PersistenceException.class);
 		
 		entityManager.getTransaction().commit();
@@ -176,8 +160,7 @@ class CourseJPARepositoryIT {
 		
 		assertThat(entityManager.createQuery("from Course",Course.class).getResultList())
 			.isEmpty();
-	}
-		
+	}	
 
 	private void persistCourseToDB(Course course) {
 		entityManager.getTransaction().begin();

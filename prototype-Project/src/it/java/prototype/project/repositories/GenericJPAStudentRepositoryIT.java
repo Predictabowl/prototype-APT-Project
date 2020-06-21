@@ -7,42 +7,25 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import prototype.project.exceptions.SchoolDatabaseException;
 import prototype.project.model.Student;
+import prototype.project.test.utils.GenericJPAEntitySetup;
 
-class StudentJPARepositoryIT {
+class GenericJPAStudentRepositoryIT extends GenericJPAEntitySetup{
 
-	private EntityManagerFactory eManagerFactory;
-	private EntityManager entityManager;
-	
-	private StudentJPARepository repository;
+	private GenericJPAEntityRepository<Student> repository;
 
 	
 	@BeforeEach
 	public void setUp() {
-		eManagerFactory = Persistence.createEntityManagerFactory("prototype.project");
-		entityManager = eManagerFactory.createEntityManager();
-		repository = new StudentJPARepository(entityManager);
-		
-		entityManager.createQuery("from Student",Student.class).getResultStream()
-			.forEach(e -> entityManager.remove(e));
+		setUpEntity(Student.class);
+		repository = new GenericJPAEntityRepository<>(Student.class,entityManager);
 	}
-	
-	@AfterEach
-	public void tearDown() {
-		entityManager.close();
-		eManagerFactory.close();
-	}
-	
 	
 	@Test
 	public void test_findAll_when_empty() {
@@ -74,6 +57,13 @@ class StudentJPARepositoryIT {
 	}
 	
 	@Test
+	public void test_findByCode_when_not_present() {
+		Student notFound = repository.findByCode("code1");
+		
+		assertThat(notFound).isNull();
+	}
+	
+	@Test
 	public void test_findById_when_not_present() {
 		Student notFound = repository.findById(1L);
 		
@@ -93,14 +83,7 @@ class StudentJPARepositoryIT {
 	}
 	
 	@Test
-	public void test_findByCode_when_not_present() {
-		Student notFound = repository.findByCode("code1");
-		
-		assertThat(notFound).isNull();
-	}
-	
-	@Test
-	public void test_save_successful() {
+	public void test_save_new_student_successful() {
 		Student student = new Student("AR1", "Carlo");
 				
 		assertThat(catchThrowable(() -> {
@@ -112,12 +95,10 @@ class StudentJPARepositoryIT {
 					.createQuery("from Student",Student.class)
 					.getSingleResult());
 		})).isNull();
-		
 	}
 	
-	
 	@Test
-	public void test_save_when_PersistanceException_occur_should_throw_CodeConstraintViolationException() {
+	public void test_save_when_PersistanceException_occur_should_throw_new_Exception() {
 		Student student1 = new Student("AR1", "Carlo");
 		persistStudentToDB(student1);
 		Student student2 = new Student("AR1", "Luigi");
@@ -126,31 +107,13 @@ class StudentJPARepositoryIT {
 		
 		assertThatThrownBy(() -> repository.save(student2))
 			.isInstanceOf(SchoolDatabaseException.class)
-			.hasMessage("Error while saving Student: "+student2)
+			.hasMessage("Error while saving entity: "+student2)
 			.getCause().isInstanceOf(PersistenceException.class);
 		
 		entityManager.getTransaction().commit();
 		
 		assertThat(entityManager.createQuery("from Student",Student.class)
 				.getSingleResult()).isEqualToComparingFieldByField(student1);
-
-	}
-	
-	@Test
-	public void test_save_with_null_code_should_throw() {
-		Student student = new Student(null, "Carlo");
-
-		entityManager.getTransaction().begin();
-		
-		assertThatThrownBy(() -> repository.save(student))
-			.isInstanceOf(SchoolDatabaseException.class)
-			.hasMessage("Error while saving Student: "+student)
-			.getCause().isInstanceOf(PersistenceException.class);
-		
-		entityManager.getTransaction().commit();
-		
-		assertThat(entityManager.createQuery("from Student",Student.class)
-				.getResultList()).isEmpty();
 
 	}
 	

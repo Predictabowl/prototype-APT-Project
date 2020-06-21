@@ -1,38 +1,24 @@
 package prototype.project.model;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 
 import org.hibernate.PropertyValueException;
 import org.hibernate.exception.ConstraintViolationException;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class CourseIT {
+import prototype.project.test.utils.GenericJPAEntitySetup;
 
-	private EntityManagerFactory eManagerFactory;
-	private EntityManager entityManager;
-	
+class CourseIT extends GenericJPAEntitySetup{
+
 	@BeforeEach
 	public void setUp() {
-		eManagerFactory = Persistence.createEntityManagerFactory("prototype.project");
-		entityManager = eManagerFactory.createEntityManager();
+		setUpEntity(Course.class);
+	}
 		
-		entityManager.createQuery("from Course",Course.class).getResultStream()
-			.forEach(e -> entityManager.remove(e));
-	}
-	
-	@AfterEach
-	public void tearDown() {
-		entityManager.close();
-		eManagerFactory.close();
-	}
-	
 	@Test
 	void test_duplicate_Code_should_throw() {
 		Course course1 = new Course("CS1", "test1");
