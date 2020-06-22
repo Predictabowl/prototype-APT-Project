@@ -3,9 +3,13 @@ package prototype.project.repositories;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 
 import prototype.project.exceptions.SchoolDatabaseException;
+import prototype.project.model.Course;
 import prototype.project.model.Registration;
+import prototype.project.model.Student;
+import prototype.project.model.id.RegistrationId;
 
 public class RegistrationJPARepository implements RegistrationRepository{
 
@@ -17,26 +21,28 @@ public class RegistrationJPARepository implements RegistrationRepository{
 	
 	@Override
 	public List<Registration> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return entityManager.createQuery("from Registration",Registration.class).getResultList();
 	}
 
 	@Override
-	public Registration findById(long courseId, long studentId) {
-		// TODO Auto-generated method stub
-		return null;
+	public Registration findById(long studentId, long courseId) {
+		return entityManager.find(Registration.class, new RegistrationId(studentId, courseId));
 	}
 
 	@Override
-	public Registration save(Registration registration) throws SchoolDatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+	public void save(Registration registration){
+		registration.getStudent().getRegistrations().add(registration);
+		registration.getCourse().getRegistrations().add(registration);
 	}
 
 	@Override
-	public Registration delete(long courseId, long studentId) {
-		// TODO Auto-generated method stub
-		return null;
+	public Registration delete(long studentId, long courseId) {
+		Registration registration = entityManager.find(Registration.class, new RegistrationId(studentId, courseId));
+		if (registration != null) {
+			registration.getStudent().getRegistrations().remove(registration);
+			registration.getCourse().getRegistrations().remove(registration);
+		}
+		return registration;
 	}
 
 }

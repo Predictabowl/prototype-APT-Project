@@ -13,9 +13,10 @@ import org.hibernate.Session;
 import org.hibernate.exception.ConstraintViolationException;
 
 import prototype.project.exceptions.SchoolDatabaseException;
+import prototype.project.model.GenericEntity;
 import prototype.project.model.Student;
 
-public class GenericJPAEntityRepository<E> implements GenericEntityRepository<E> {
+public class GenericJPAEntityRepository<E extends GenericEntity> implements GenericEntityRepository<E> {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	
@@ -41,8 +42,8 @@ public class GenericJPAEntityRepository<E> implements GenericEntityRepository<E>
 //			criteriaQuery.where(criteriaBuilder.equal(studentRoot.get("code"), code));
 //			return entityManager.createQuery(criteriaQuery).getSingleResult();
 			
-			Session session = entityManager.unwrap(Session.class);
-			return session.byNaturalId(classType).using("code", code).getReference();
+			return entityManager.unwrap(Session.class)
+					.byNaturalId(classType).using("code", code).getReference();
 			
 //			return entityManager.createQuery("SELECT s FROM Student s WHERE s.code LIKE :sCode", Student.class)
 //					.setParameter("sCode", code).getSingleResult();
@@ -54,11 +55,12 @@ public class GenericJPAEntityRepository<E> implements GenericEntityRepository<E>
 	}
 
 	@Override
-	public E save(E entity) throws SchoolDatabaseException{
-		try {
+	public E save(E entity){
+		if (entity.getId() != null) {
 			return entityManager.merge(entity);
-		} catch (PersistenceException e) {
-			throw new SchoolDatabaseException("Error while saving entity: "+entity,e);
+		} else {
+			entityManager.persist(entity);
+			return entity;
 		}
 	}
 

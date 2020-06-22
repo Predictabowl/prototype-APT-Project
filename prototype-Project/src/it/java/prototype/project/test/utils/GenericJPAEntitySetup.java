@@ -1,10 +1,13 @@
 package prototype.project.test.utils;
 
+import static org.mockito.Mockito.spy;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import org.junit.jupiter.api.AfterEach;
+import org.mockito.Spy;
 
 
 public class GenericJPAEntitySetup {

@@ -12,10 +12,10 @@ import javax.persistence.Persistence;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class RegistrationIT {
+public class JoinRegistrationIT {
 
-	private static LinkedList<Student> students = new LinkedList<>();
-	private static LinkedList<Course> courses = new LinkedList<>();
+	private LinkedList<Student> students = new LinkedList<>();
+	private LinkedList<Course> courses = new LinkedList<>();
 
 	private EntityManagerFactory eManagerFactory;
 	private EntityManager entityManager;
@@ -52,7 +52,7 @@ public class RegistrationIT {
 	}
 
 	@Test
-	public void test_many_to_many_mapping() {
+	public void test_many_to_many_mapping_and_cascade() {
 		Registration registration = new Registration(students.get(0), courses.get(0), false);
 		Registration registration2 = new Registration(students.get(1), courses.get(0), true);
 		Registration registration3 = new Registration(students.get(2), courses.get(2), true);
@@ -68,6 +68,45 @@ public class RegistrationIT {
 
 		assertThat(entityManager.createQuery("from Registration", Registration.class).getResultList())
 			.containsOnly(registration,registration2,registration3);
+		
+		entityManager.getTransaction().begin();
+		registration.getStudent().getRegistrations().remove(registration);
+		registration.getCourse().getRegistrations().remove(registration);
+		entityManager.getTransaction().commit();
+		
+		assertThat(entityManager.createQuery("from Registration", Registration.class).getResultList())
+			.containsOnly(registration2,registration3);
 	}
-
+	
+	@Test
+	public void test_modify_Registration_should_cascade_to_entities() {
+		Registration registration = new Registration(students.get(0), courses.get(0), false);
+		entityManager.getTransaction().begin();
+		registration.getCourse().getRegistrations().add(registration);
+		registration.getStudent().getRegistrations().add(registration);
+		entityManager.getTransaction().commit();
+		
+		registration.setPaid(true);
+		
+		Student student = entityManager.find(Student.class, registration.getStudent().getId());
+		Course course = entityManager.find(Course.class, registration.getCourse().getId());
+		
+		assertThat(student.getRegistrations().iterator().next().isPaid()).isTrue();
+		assertThat(course.getRegistrations().iterator().next().isPaid()).isTrue();
+	}
+	
+	@Test
+	public void test_modify_Registration_from_one_entity_should_cascade_to_the_other() {
+		Registration registration = new Registration(students.get(0), courses.get(0), false);
+		entityManager.getTransaction().begin();
+		registration.getCourse().getRegistrations().add(registration);
+		registration.getStudent().getRegistrations().add(registration);
+		entityManager.getTransaction().commit();
+		
+		students.get(0).getRegistrations().iterator().next().setPaid(true);
+		Course course = entityManager.find(Course.class, courses.get(0).getId());
+		
+		assertThat(course.getRegistrations().iterator().next().isPaid()).isTrue();
+	}
+		
 }

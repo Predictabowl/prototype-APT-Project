@@ -7,7 +7,7 @@ import prototype.project.model.Registration;
 
 public interface RegistrationRepository {
 	public List<Registration> findAll();
-	public Registration findById(long courseId, long studentId);
-	public Registration save(Registration registration) throws SchoolDatabaseException;
-	public Registration delete(long courseId, long studentId);
+	public Registration findById(long studentId, long courseId);
+	public void save(Registration registration);
+	public Registration delete(long studentId, long courseId);
 }
