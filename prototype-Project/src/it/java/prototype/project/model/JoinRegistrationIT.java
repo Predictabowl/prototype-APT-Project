@@ -109,4 +109,16 @@ public class JoinRegistrationIT {
 		assertThat(course.getRegistrations().iterator().next().isPaid()).isTrue();
 	}
 		
+	@Test
+	public void learning_test_bidirectional_mapping() {
+		Student student = entityManager.createQuery("From Student",Student.class).getResultList().iterator().next();
+		Course course= entityManager.createQuery("From Course",Course.class).getResultList().iterator().next();
+		
+		Registration registration = new Registration(student, course, false);
+		entityManager.getTransaction().begin();
+		entityManager.persist(registration);
+		entityManager.getTransaction().commit();
+		
+		assertThat(student.getRegistrations().iterator().next()).isNotNull();
+	}
 }

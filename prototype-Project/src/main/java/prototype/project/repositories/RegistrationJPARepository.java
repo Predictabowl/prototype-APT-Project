@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
+import javax.transaction.Transactional;
 
 import prototype.project.exceptions.SchoolDatabaseException;
 import prototype.project.model.Course;
@@ -20,29 +21,30 @@ public class RegistrationJPARepository implements RegistrationRepository{
 	}
 	
 	@Override
+	@Transactional
 	public List<Registration> findAll() {
 		return entityManager.createQuery("from Registration",Registration.class).getResultList();
 	}
 
 	@Override
+	@Transactional
 	public Registration findById(long studentId, long courseId) {
 		return entityManager.find(Registration.class, new RegistrationId(studentId, courseId));
 	}
 
-	@Override
-	public void save(Registration registration){
-		registration.getStudent().getRegistrations().add(registration);
-		registration.getCourse().getRegistrations().add(registration);
-	}
-
-	@Override
-	public Registration delete(long studentId, long courseId) {
-		Registration registration = entityManager.find(Registration.class, new RegistrationId(studentId, courseId));
-		if (registration != null) {
-			registration.getStudent().getRegistrations().remove(registration);
-			registration.getCourse().getRegistrations().remove(registration);
-		}
-		return registration;
-	}
+//	@Override
+//	public Registration save(Registration registration){
+//		return entityManager.merge(registration);
+//	}
+//
+//	@Override
+//	public Registration delete(long studentId, long courseId) {
+//		Registration registration = entityManager.find(Registration.class, new RegistrationId(studentId, courseId));
+//		if (registration != null) {
+//			entityManager.remove(registration);
+//		}
+//		return registration;
+//		
+//	}
 
 }

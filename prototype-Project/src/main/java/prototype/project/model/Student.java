@@ -18,6 +18,7 @@ import org.hibernate.annotations.NaturalId;
 public class Student implements GenericEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "Student_ID")
 	private Long id = null;
 	
 	@Column(unique = true, updatable = false, nullable = false)
@@ -27,6 +28,7 @@ public class Student implements GenericEntity{
 	private String name;
 	
 	@OneToMany (mappedBy = "student",cascade = CascadeType.ALL, orphanRemoval = true)
+//	@OneToMany (mappedBy = "student")
 //	@JoinTable
 	private Set<Registration> registrations = new HashSet<>();
 	
@@ -74,6 +76,14 @@ public class Student implements GenericEntity{
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+	
+	public boolean addRegistration(Registration registration) {
+		return registrations.add(registration);
+	}
+	
+	public boolean removeRegistration(Registration registration) {
+		return registrations.remove(registration);
 	}
 
 	@Override

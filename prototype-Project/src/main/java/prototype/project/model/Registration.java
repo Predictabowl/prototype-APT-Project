@@ -2,9 +2,11 @@ package prototype.project.model;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 
 import prototype.project.model.id.RegistrationId;
@@ -16,17 +18,28 @@ public class Registration{
 //	@EmbeddedId
 //	RegistrationId id;
 	
+//	@Id
+//	@GeneratedValue
+//	private Long id;
+	
 	@Id
-	@ManyToOne
+//	@ManyToOne
+	@ManyToOne (cascade = CascadeType.ALL)
 //	@ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn(name = "studentId", referencedColumnName = "id")
+//	@JoinColumn(name = "studentId")
+//	@JoinTable(
+//			joinColumns = @JoinColumn(name = "studentId", referencedColumnName = "id"),
+//			inverseJoinColumns = @JoinColumn(name = "registrationId", referencedColumnName = "id"))
 //	@MapsId("studentId")
 	private Student student;
 
 	@Id
-	@ManyToOne
+//	@ManyToOne
+	@ManyToOne (cascade = CascadeType.ALL)
 //	@ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn(name = "courseId", referencedColumnName = "id")
+//	@JoinColumn(name = "courseId")
 //	@MapsId("courseId")
 	private Course course;
 
@@ -42,6 +55,7 @@ public class Registration{
 		this.course = course;
 		this.paid = paid;
 	}
+
 
 	public Student getStudent() {
 		return student;

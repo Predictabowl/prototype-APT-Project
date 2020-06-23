@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import prototype.project.model.Course;
 import prototype.project.model.Registration;
 import prototype.project.model.Student;
+import prototype.project.repositories.GenericJPAEntityRepository;
 
 public class JPALearningTest {
 
@@ -88,5 +89,11 @@ public class JPALearningTest {
 		assertThat(students.get(0).getRegistrations()).containsExactly(registration);
 		assertThat(courses.get(1).getRegistrations()).isEmpty();
 		assertThat(registrations).containsExactly(registration);
+	}
+	
+	@Test
+	public void test_bidirectional_Mapping() {
+		
+		
 	}
 }

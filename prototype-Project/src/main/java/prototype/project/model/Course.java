@@ -18,6 +18,7 @@ import org.hibernate.annotations.NaturalId;
 public class Course implements GenericEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "Course_ID")
 	private Long id = null;
 	
 	@Column(unique = true, updatable = false, nullable = false)
@@ -76,6 +77,14 @@ public class Course implements GenericEntity{
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+	
+	public boolean addRegistration(Registration registration) {
+		return registrations.add(registration);
+	}
+	
+	public boolean removeRegistration(Registration registration) {
+		return registrations.remove(registration);
 	}
 
 	
