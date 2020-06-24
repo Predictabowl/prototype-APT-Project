@@ -12,7 +12,7 @@ import javax.persistence.Persistence;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class JoinRegistrationIT {
+public class RegistrationJoinMappingIT {
 
 	private LinkedList<Student> students = new LinkedList<>();
 	private LinkedList<Course> courses = new LinkedList<>();
@@ -110,7 +110,7 @@ public class JoinRegistrationIT {
 	}
 		
 	@Test
-	public void learning_test_bidirectional_mapping() {
+	public void test_persisting_registration_does_not_cascade_on_entities() {
 		Student student = entityManager.createQuery("From Student",Student.class).getResultList().iterator().next();
 		Course course= entityManager.createQuery("From Course",Course.class).getResultList().iterator().next();
 		
@@ -119,6 +119,7 @@ public class JoinRegistrationIT {
 		entityManager.persist(registration);
 		entityManager.getTransaction().commit();
 		
-		assertThat(student.getRegistrations().iterator().next()).isNotNull();
+		assertThat(student.getRegistrations()).isEmpty();
+		assertThat(course.getRegistrations()).isEmpty();
 	}
 }

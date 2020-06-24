@@ -65,16 +65,17 @@ public class GenericJPAEntityRepository<E extends GenericEntity> implements Gene
 	}
 
 	@Override
-	public E delete(long id) {
-		E entity = entityManager.find(classType, id);
-		if (entity != null)
-			entityManager.remove(entity);
-		return entity;
+	public E delete(E entity) {
+		E entityToDelete = entityManager.find(classType, entity.getId());
+		if (entityToDelete != null)
+			entityManager.remove(entityToDelete);
+		return entityToDelete;
 	}
 
 	@Override
 	public E findById(long id) {
 		return entityManager.find(classType, id);
 	}
+
 
 }

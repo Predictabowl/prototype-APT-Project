@@ -1,12 +1,9 @@
 package prototype.project.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 
 import prototype.project.model.id.RegistrationId;
@@ -24,9 +21,9 @@ public class Registration{
 	
 	@Id
 //	@ManyToOne
-	@ManyToOne (cascade = CascadeType.ALL)
-//	@ManyToOne (fetch = FetchType.LAZY)
-	@JoinColumn(name = "studentId", referencedColumnName = "id")
+//	@ManyToOne (cascade = CascadeType.ALL)
+	@ManyToOne (fetch = FetchType.LAZY)
+//	@JoinColumn(name = "studentId", referencedColumnName = "id")
 //	@JoinColumn(name = "studentId")
 //	@JoinTable(
 //			joinColumns = @JoinColumn(name = "studentId", referencedColumnName = "id"),
@@ -36,16 +33,16 @@ public class Registration{
 
 	@Id
 //	@ManyToOne
-	@ManyToOne (cascade = CascadeType.ALL)
-//	@ManyToOne (fetch = FetchType.LAZY)
-	@JoinColumn(name = "courseId", referencedColumnName = "id")
+//	@ManyToOne (cascade = CascadeType.ALL)
+	@ManyToOne (fetch = FetchType.LAZY)
+//	@JoinColumn(name = "courseId", referencedColumnName = "id")
 //	@JoinColumn(name = "courseId")
 //	@MapsId("courseId")
 	private Course course;
 
 	private boolean paid;
 	
-	public Registration() {
+	public Registration(){
 		// TODO Auto-generated constructor stub
 	}
 
@@ -115,6 +112,10 @@ public class Registration{
 	@Override
 	public String toString() {
 		return "Registration [student=" + student.getCode() + ", course=" + course.getCode() + ", paid=" + paid + "]";
+	}
+
+	public RegistrationId getId() {
+		return new RegistrationId(student.getId(), course.getId());
 	}
 
 }

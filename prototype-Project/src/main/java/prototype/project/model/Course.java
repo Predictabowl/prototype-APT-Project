@@ -9,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.NaturalId;
@@ -18,7 +17,6 @@ import org.hibernate.annotations.NaturalId;
 public class Course implements GenericEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "Course_ID")
 	private Long id = null;
 	
 	@Column(unique = true, updatable = false, nullable = false)
@@ -51,6 +49,7 @@ public class Course implements GenericEntity{
 		return id;
 	}
 
+	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -71,6 +70,7 @@ public class Course implements GenericEntity{
 		this.registrations = registrations;
 	}
 
+	@Override
 	public String getCode() {
 		return code;
 	}

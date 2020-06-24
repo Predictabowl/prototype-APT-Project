@@ -18,6 +18,7 @@ import prototype.project.exceptions.SchoolDatabaseException;
 import prototype.project.model.Course;
 import prototype.project.model.Registration;
 import prototype.project.model.Student;
+import prototype.project.model.id.RegistrationId;
 
 class RegistrationJPARepositoryIT{
 	
@@ -80,7 +81,7 @@ class RegistrationJPARepositoryIT{
 	@Test
 	public void test_findById_when_not_found_should_return_null() {
 
-		assertThat(repository.findById(2L,1L)).isNull();
+		assertThat(repository.findById(new RegistrationId(2L,1L))).isNull();
 	}
 	
 	@Test
@@ -90,39 +91,41 @@ class RegistrationJPARepositoryIT{
 		addRegistrationToDB(registration1);
 		addRegistrationToDB(registration2);
 		
-		assertThat(repository.findById(students.get(1).getId(),courses.get(2).getId()))
+		
+		assertThat(repository.findById(
+			new RegistrationId(students.get(1).getId(),courses.get(2).getId())))
 			.isSameAs(registration2);
 	}
 	
-//	@Test
-//	public void test_save_new_Registration() {
-//		Registration registration = new Registration(students.get(2), courses.get(1), true);
-//		
-//		Registration savedR = repository.save(registration);
-//		
-//		assertThat(savedR).isEqualToComparingFieldByField(registration);
+	@Test
+	public void test_save_new_Registration() {
+		Registration registration = new Registration(students.get(2), courses.get(1), true);
+		
+		Registration savedR = repository.save(registration);
+		
+		assertThat(savedR).isEqualToComparingFieldByField(registration);
 //		assertThat(entityManager.contains(registration)).isTrue();
-////		assertThat(students.get(2).getRegistrations()).containsExactly(registration);
-////		assertThat(courses.get(1).getRegistrations()).containsExactly(registration);
-//	}
-//	
-//	@Test
-//	public void test_save_duplicate_Registration_should_ignore_and_return_null() {
-//		Registration registration = new Registration(students.get(2), courses.get(1), true);
-//		addRegistrationToDB(registration);
-//		Registration registration2 = new Registration(students.get(2), courses.get(1), false);
-//		
-//		Registration savedR = repository.save(registration2);
-//
-//		assertThat(savedR).isNull();
-//		Set<Registration> studentReg= students.get(2).getRegistrations();
-//		Set<Registration> courseReg= courses.get(1).getRegistrations();
-//		assertThat(studentReg).containsExactly(registration);
-//		assertThat(courseReg).containsExactly(registration);
-//		assertThat(studentReg.iterator().next()).isEqualToComparingFieldByField(registration);
-//		assertThat(courseReg.iterator().next()).isEqualToComparingFieldByField(registration);
-//	}
-//	
+		assertThat(students.get(2).getRegistrations()).containsExactly(registration);
+		assertThat(courses.get(1).getRegistrations()).containsExactly(registration);
+	}
+	
+	@Test
+	public void test_save_duplicate_Registration_should_ignore_and_return_null() {
+		Registration registration = new Registration(students.get(2), courses.get(1), true);
+		addRegistrationToDB(registration);
+		Registration registration2 = new Registration(students.get(2), courses.get(1), false);
+		
+		Registration savedR = repository.save(registration2);
+
+		assertThat(savedR).isNull();
+		Set<Registration> studentReg= students.get(2).getRegistrations();
+		Set<Registration> courseReg= courses.get(1).getRegistrations();
+		assertThat(studentReg).containsExactly(registration);
+		assertThat(courseReg).containsExactly(registration);
+		assertThat(studentReg.iterator().next()).isEqualToComparingFieldByField(registration);
+		assertThat(courseReg.iterator().next()).isEqualToComparingFieldByField(registration);
+	}
+	
 //	@Test
 //	public void test_save_with_unvalid_parent_entities() {
 //		Registration registration = new Registration(
@@ -135,32 +138,33 @@ class RegistrationJPARepositoryIT{
 //		assertThat(savedR).isNull();
 //		assertThat(entityManager.contains(registration)).isFalse();
 //	}
-//	
-//	
-//	
-//	@Test
-//	public void test_delete_when_Registration_not_present_should_return_null() {
-//		entityManager.getTransaction().begin();
-//		assertThat(repository.delete(2L, 3L)).isNull();
-//		entityManager.getTransaction().commit();
-//		
-//		assertThat(entityManager.createQuery("from Registration",Registration.class).getResultList())
-//			.isEmpty();
-//	}
-//	
-//	@Test
-//	public void test_delete_when_Registration_is_present() {
-//		Registration registration = new Registration(students.get(2), courses.get(1), false);
-//		addRegistrationToDB(registration);
-//		
-//		entityManager.getTransaction().begin();
-//		assertThat(repository.delete(students.get(2).getId(), courses.get(1).getId()))
-//			.isSameAs(registration);
-//		entityManager.getTransaction().commit();
-//		
-//		assertThat(entityManager.createQuery("from Registration",Registration.class).getResultList())
-//			.isEmpty();
-//	}
+	
+	
+	@Test
+	public void test_delete_when_Registration_not_present_should_return_null() {
+		Student student = students.get(0);
+		Course course = courses.get(2);
+		
+		Registration registration = new Registration(student, course, true);
+		
+		assertThat(repository.delete(registration)).isNull();
+		
+		assertThat(student.getRegistrations()).isEmpty();
+		assertThat(course.getRegistrations()).isEmpty();
+	}
+	
+	@Test
+	public void test_delete_when_Registration_is_present() {
+		Student student = students.get(2);
+		Course course = courses.get(1);
+		Registration registration = new Registration(student, course, false);
+		addRegistrationToDB(registration);
+		
+		assertThat(repository.delete(registration)).isSameAs(registration);
+
+		assertThat(student.getRegistrations()).isEmpty();
+		assertThat(course.getRegistrations()).isEmpty();
+	}
 
 	
 	private void addRegistrationToDB(Registration registration) {

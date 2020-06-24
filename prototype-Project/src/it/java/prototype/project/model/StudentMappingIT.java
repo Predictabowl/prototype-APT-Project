@@ -11,9 +11,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import prototype.project.test.utils.GenericJPAEntitySetup;
+import prototype.project.utils.JPAEntityManagerSetup;
 
-class StudentIT extends GenericJPAEntitySetup{
+class StudentMappingIT extends JPAEntityManagerSetup{
 
 	@BeforeEach
 	public void setUp() {
@@ -27,7 +27,7 @@ class StudentIT extends GenericJPAEntitySetup{
 	}
 	
 	@Test
-	void test_duplicate_Code_should_throw() {
+	void test_duplicate_Code_should_throw_exception() {
 		Student student1 = new Student("AR1", "test1");
 		Student student2 = new Student("AR1", "test2");
 		entityManager.getTransaction().begin();
@@ -46,7 +46,7 @@ class StudentIT extends GenericJPAEntitySetup{
 	}
 	
 	@Test
-	void test_null_Code_should_throw() {
+	void test_null_Code_should_throw_exception() {
 		Student student = new Student(null, "test1");
 		entityManager.getTransaction().begin();
 
@@ -61,7 +61,7 @@ class StudentIT extends GenericJPAEntitySetup{
 	}
 	
 	@Test
-	void test_update_Code_should_throw() {
+	void test_update_Code_should_throw_exception() {
 		Student student = new Student("AR1", "test1");
 		entityManager.getTransaction().begin();
 		entityManager.persist(student);

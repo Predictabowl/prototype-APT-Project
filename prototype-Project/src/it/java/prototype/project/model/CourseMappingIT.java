@@ -10,9 +10,9 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import prototype.project.test.utils.GenericJPAEntitySetup;
+import prototype.project.utils.JPAEntityManagerSetup;
 
-class CourseIT extends GenericJPAEntitySetup{
+class CourseMappingIT extends JPAEntityManagerSetup{
 
 	@BeforeEach
 	public void setUp() {
@@ -20,7 +20,7 @@ class CourseIT extends GenericJPAEntitySetup{
 	}
 		
 	@Test
-	void test_duplicate_Code_should_throw() {
+	void test_duplicate_Code_should_throw_exception() {
 		Course course1 = new Course("CS1", "test1");
 		Course course2 = new Course("CS1", "test2");
 		entityManager.getTransaction().begin();
@@ -39,7 +39,7 @@ class CourseIT extends GenericJPAEntitySetup{
 	}
 	
 	@Test
-	void test_null_Code_should_throw() {
+	void test_null_Code_should_throw_exception() {
 		Course course = new Course(null, "test1");
 		entityManager.getTransaction().begin();
 
@@ -54,7 +54,7 @@ class CourseIT extends GenericJPAEntitySetup{
 	}
 	
 	@Test
-	void test_update_Code_should_throw() {
+	void test_update_Code_should_throw_exception() {
 		Course course = new Course("AR1", "test1");
 		entityManager.getTransaction().begin();
 		entityManager.persist(course);
