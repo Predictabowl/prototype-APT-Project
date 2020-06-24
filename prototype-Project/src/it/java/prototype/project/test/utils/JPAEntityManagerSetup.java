@@ -1,4 +1,4 @@
-package prototype.project.utils;
+package prototype.project.test.utils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

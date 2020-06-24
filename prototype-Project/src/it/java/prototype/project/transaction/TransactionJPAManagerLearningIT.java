@@ -13,7 +13,7 @@ import prototype.project.model.Registration;
 import prototype.project.model.Student;
 import prototype.project.repositories.GenericJPAEntityRepository;
 import prototype.project.repositories.RegistrationJPARepository;
-import prototype.project.utils.JPAEntityManagerSetup;
+import prototype.project.test.utils.JPAEntityManagerSetup;
 
 class TransactionJPAManagerLearningIT extends JPAEntityManagerSetup{
 

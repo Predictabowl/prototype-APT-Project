@@ -10,7 +10,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import prototype.project.utils.JPAEntityManagerSetup;
+import prototype.project.test.utils.JPAEntityManagerSetup;
 
 class CourseMappingIT extends JPAEntityManagerSetup{
 

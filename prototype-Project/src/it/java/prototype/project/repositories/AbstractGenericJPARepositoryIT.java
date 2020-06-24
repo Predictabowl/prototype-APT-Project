@@ -16,7 +16,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import prototype.project.model.GenericEntity;
-import prototype.project.utils.JPAEntityManagerSetup;
+import prototype.project.test.utils.JPAEntityManagerSetup;
 
 public abstract class AbstractGenericJPARepositoryIT<E extends GenericEntity> extends JPAEntityManagerSetup{
 

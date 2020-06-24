@@ -11,7 +11,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import prototype.project.utils.JPAEntityManagerSetup;
+import prototype.project.test.utils.JPAEntityManagerSetup;
 
 class StudentMappingIT extends JPAEntityManagerSetup{
 
