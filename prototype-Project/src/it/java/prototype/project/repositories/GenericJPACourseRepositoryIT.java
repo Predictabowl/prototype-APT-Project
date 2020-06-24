@@ -12,13 +12,8 @@ public class GenericJPACourseRepositoryIT extends AbstractGenericJPARepositoryIT
 	}
 	
 	@Override
-	protected Course createSampleEntity1() {
-		return new Course("Code1", "Test course");
-	}
-
-	@Override
-	protected Course createSampleEntity2() {
-		return new Course("Cod3", "Some other course");
+	protected Course createSampleEntity(int i) {
+		return new Course("Code"+i, "Test course "+i);
 	}
 
 }

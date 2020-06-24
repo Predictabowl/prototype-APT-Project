@@ -64,7 +64,7 @@ public abstract class AbstractGenericJPARepositoryIT<E extends GenericEntity> ex
 	
 	@Test
 	public void test_findAll_when_not_empty() {
-		E entity = createSampleEntity1();
+		E entity = createSampleEntity(1);
 		persistEntityToDB(entity);
 		
 		List<E> entities= repository.findAll();
@@ -74,8 +74,8 @@ public abstract class AbstractGenericJPARepositoryIT<E extends GenericEntity> ex
 	
 	@Test
 	public void test_findByCode_successful() {
-		E entity1 = createSampleEntity1();
-		E entity2 = createSampleEntity2();
+		E entity1 = createSampleEntity(1);
+		E entity2 = createSampleEntity(2);
 		persistEntityToDB(entity1);
 		persistEntityToDB(entity2);
 		
@@ -101,8 +101,8 @@ public abstract class AbstractGenericJPARepositoryIT<E extends GenericEntity> ex
 	
 	@Test
 	public void test_findById_successful() {
-		E entity1 = createSampleEntity1();
-		E entity2 = createSampleEntity2();
+		E entity1 = createSampleEntity(1);
+		E entity2 = createSampleEntity(2);
 		persistEntityToDB(entity1);
 		persistEntityToDB(entity2);
 		
@@ -115,7 +115,7 @@ public abstract class AbstractGenericJPARepositoryIT<E extends GenericEntity> ex
 	
 	@Test
 	public void test_save_successful() {
-		E entity = createSampleEntity1();
+		E entity = createSampleEntity(1);
 				
 		E saved = repository.save(entity);
 
@@ -126,9 +126,9 @@ public abstract class AbstractGenericJPARepositoryIT<E extends GenericEntity> ex
 		
 	@Test
 	public void test_save_when_id_present_should_update() {
-		E entity1 = createSampleEntity1();
+		E entity1 = createSampleEntity(1);
 		persistEntityToDB(entity1);
-		E entity2 = createSampleEntity2();
+		E entity2 = createSampleEntity(2);
 		entity2.setId(entity1.getId());
 		
 		E saved = repository.save(entity2);
@@ -140,9 +140,9 @@ public abstract class AbstractGenericJPARepositoryIT<E extends GenericEntity> ex
 	
 	@Test
 	public void test_delete_when_entity_not_present_should_return_null() {
-		E entity1 = createSampleEntity1();
+		E entity1 = createSampleEntity(1);
 		persistEntityToDB(entity1);
-		E entity2 = createSampleEntity2();
+		E entity2 = createSampleEntity(2);
 		long fakeId = entity1.getId()+1;
 		entity2.setId(fakeId);
 		
@@ -153,7 +153,7 @@ public abstract class AbstractGenericJPARepositoryIT<E extends GenericEntity> ex
 	
 	@Test
 	public void test_delete_should_remove_and_return_deleted_entity() {
-		E entity = createSampleEntity1();
+		E entity = createSampleEntity(1);
 		persistEntityToDB(entity);
 		
 		E deleted = repository.delete(entity);
@@ -170,7 +170,6 @@ public abstract class AbstractGenericJPARepositoryIT<E extends GenericEntity> ex
 		entityManager.getTransaction().commit();
 	}
 	
-	protected abstract E createSampleEntity1();
-	protected abstract E createSampleEntity2();
+	protected abstract E createSampleEntity(int i);
 
 }

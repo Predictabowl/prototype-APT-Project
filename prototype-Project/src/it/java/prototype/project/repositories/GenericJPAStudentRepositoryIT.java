@@ -12,14 +12,8 @@ public class GenericJPAStudentRepositoryIT extends AbstractGenericJPARepositoryI
 	}
 	
 	@Override
-	protected Student createSampleEntity1() {
-		return new Student("Stc1", "test student 1");
-	}
-
-	@Override
-	protected Student createSampleEntity2() {
-		return new Student("C0d32", "Student test 2");
-	}
-	
+	protected Student createSampleEntity(int i) {
+		return new Student("Stcd"+i, "test student "+i);
+	}	
 
 }
