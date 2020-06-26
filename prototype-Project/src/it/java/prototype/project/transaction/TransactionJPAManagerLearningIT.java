@@ -19,14 +19,14 @@ class TransactionJPAManagerLearningIT extends JPAEntityManagerSetup{
 
 //	private GenericJPAEntityRepository<Course> repository;
 //	private EntityManager spyEM;
-	private TempTransactionJPAManager manager;
+	private TransactionJPAManager manager;
 	
 	@BeforeEach
 	public void setUp() {
 		setUpEntity(Course.class);
 //		spyEM = spy(entityManager);
 //		repository = new GenericJPAEntityRepository<Course>(Course.class, spyEM);
-		manager = new TempTransactionJPAManager(entityManager);
+		manager = new TransactionJPAManager(entityManager);
 	}
 	
 
