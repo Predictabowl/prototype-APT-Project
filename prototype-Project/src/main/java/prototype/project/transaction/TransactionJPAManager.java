@@ -38,6 +38,5 @@ public class TransactionJPAManager implements TransactionManager{
 		}
 		return result;
 	}
-
-
+	
 }
