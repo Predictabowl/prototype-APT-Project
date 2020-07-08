@@ -12,11 +12,11 @@ import org.hibernate.PropertyValueException;
 import org.hibernate.Session;
 import org.hibernate.exception.ConstraintViolationException;
 
-import prototype.project.exceptions.SchoolDatabaseException;
+import prototype.project.exceptions.SchoolDomainException;
 import prototype.project.model.GenericEntity;
 import prototype.project.model.Student;
 
-public class GenericJPAEntityRepository<E extends GenericEntity> implements GenericEntityRepository<E> {
+public class GenericJPAEntityRepository<E extends GenericEntity> implements GenericEntityRepository<E,Long> {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	
@@ -33,7 +33,6 @@ public class GenericJPAEntityRepository<E extends GenericEntity> implements Gene
 		return entityManager.createQuery("from "+classType.getName(), classType).getResultList();
 	}
 
-	@Override
 	public E findByCode(String code) {
 		try {
 //			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -73,7 +72,7 @@ public class GenericJPAEntityRepository<E extends GenericEntity> implements Gene
 	}
 
 	@Override
-	public E findById(long id) {
+	public E findById(Long id) {
 		return entityManager.find(classType, id);
 	}
 

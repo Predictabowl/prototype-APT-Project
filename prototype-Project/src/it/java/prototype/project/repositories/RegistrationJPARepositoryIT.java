@@ -14,7 +14,7 @@ import javax.persistence.PersistenceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import prototype.project.exceptions.SchoolDatabaseException;
+import prototype.project.exceptions.SchoolDomainException;
 import prototype.project.model.Course;
 import prototype.project.model.Registration;
 import prototype.project.model.Student;

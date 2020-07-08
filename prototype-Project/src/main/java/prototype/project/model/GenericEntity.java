@@ -4,4 +4,5 @@ public interface GenericEntity {
 	public Long getId();
 	public void setId(Long id);
 	public String getCode();
+	public void setCode(String code);
 }

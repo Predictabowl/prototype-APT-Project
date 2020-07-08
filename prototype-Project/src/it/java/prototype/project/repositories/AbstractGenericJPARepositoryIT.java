@@ -137,6 +137,7 @@ public abstract class AbstractGenericJPARepositoryIT<E extends GenericEntity> ex
 		assertThat(entity1).isEqualToComparingFieldByField(saved);
 		verify(spyEM).merge(entity2);
 	}
+
 	
 	@Test
 	public void test_delete_when_entity_not_present_should_return_null() {
@@ -162,8 +163,8 @@ public abstract class AbstractGenericJPARepositoryIT<E extends GenericEntity> ex
 		verify(spyEM).find(entityClass, entity.getId());
 		verify(spyEM).remove(entity);
 		assertThat(entityManager.contains(entity)).isFalse();
-	}	
-
+	}
+	
 	private void persistEntityToDB(E entity) {
 		entityManager.getTransaction().begin();
 		entityManager.persist(entity);

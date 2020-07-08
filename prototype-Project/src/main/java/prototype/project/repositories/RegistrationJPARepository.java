@@ -6,14 +6,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 
-import prototype.project.exceptions.SchoolDatabaseException;
+import prototype.project.exceptions.SchoolDomainException;
 import prototype.project.model.Course;
 import prototype.project.model.GenericEntity;
 import prototype.project.model.Registration;
 import prototype.project.model.Student;
 import prototype.project.model.id.RegistrationId;
 
-public class RegistrationJPARepository{
+public class RegistrationJPARepository implements GenericEntityRepository<Registration,RegistrationId>{
 
 	private EntityManager entityManager;
 

@@ -74,6 +74,7 @@ public class Student implements GenericEntity{
 		return code;
 	}
 
+	@Override
 	public void setCode(String code) {
 		this.code = code;
 	}

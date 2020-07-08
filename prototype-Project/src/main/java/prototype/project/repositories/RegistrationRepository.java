@@ -2,7 +2,7 @@ package prototype.project.repositories;
 
 import java.util.List;
 
-import prototype.project.exceptions.SchoolDatabaseException;
+import prototype.project.exceptions.SchoolDomainException;
 import prototype.project.model.Registration;
 import prototype.project.model.id.RegistrationId;
 
